@@ -5,6 +5,11 @@ import * as ImagePicker from "expo-image-picker";
 import styles from "../styles/AddItemScreen";
 import { Image, Animated, Easing } from "react-native";
 import BouncyButton from "../components/BouncyButton";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import { uploadPhoto } from "../firebase/uploadPhoto"; 
+import { auth } from "../firebase/config"; 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 import {
   useFonts,
@@ -26,8 +31,34 @@ export default function AddItemScreen() {
 
   if (!fontsLoaded) return null;
 
-  const handleSave = () => {
-    // Later: save the item to a list or backend
+  const handleSave = async () => {
+    try {
+      const userId = auth.currentUser?.uid;
+      if (!itemName || !userId) {
+        alert("Please complete all fields and ensure you're signed in.");
+        return;
+      }
+  
+      //const photoURL = await uploadPhoto(photo);
+      //console.log("✅ Photo uploaded:", photoURL);
+  
+      const userItemsRef = collection(db, "reassurance-items", userId, "items");
+  
+      await addDoc(userItemsRef, {
+        itemName,
+        question,
+        aiResponse: null,
+        createdAt: serverTimestamp(),
+      });
+  
+      alert("✅ Item saved to Firestore!");
+      setItemName("");
+      setQuestion("");
+      setPhoto(null);
+    } catch (error) {
+      console.error("❌ Save error:", error);
+      alert("Something went wrong while saving.");
+    }
   };
 
   const openCamera = async () => {

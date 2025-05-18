@@ -58,9 +58,6 @@ const addItemStyles = StyleSheet.create({
 
     borderBottomWidth: 4,
     borderColor: "#5b4ca3",
-    borderLeftWidth: 2,
-    borderRightWidth: 2,
-    borderTopWidth: 2,
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
