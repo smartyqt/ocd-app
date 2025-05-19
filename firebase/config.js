@@ -1,32 +1,31 @@
-// firebase/config.js
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 
-// Firebase config
+// 🔐 Secure config from environment
 const firebaseConfig = {
-  apiKey: "AIzaSyD3c2G6PlAfPhIN35vqvaPVDfdKtQJ4P5c",
-  authDomain: "ocd-app-f4260.firebaseapp.com",
-  projectId: "ocd-app-f4260",
-  storageBucket: "ocd-app-f4260.appspot.com", // ✅ FIXED: should be .appspot.com
-  messagingSenderId: "663673385945",
-  appId: "1:663673385945:web:cf30ca4199e23d30e35fc8",
-  measurementId: "G-6JB2S44MQS"
+  apiKey: Constants.expoConfig.extra.firebaseApiKey,
+  authDomain: Constants.expoConfig.extra.firebaseAuthDomain,
+  projectId: Constants.expoConfig.extra.firebaseProjectId,
+  storageBucket: Constants.expoConfig.extra.firebaseStorageBucket,
+  messagingSenderId: Constants.expoConfig.extra.firebaseMessagingSenderId,
+  appId: Constants.expoConfig.extra.firebaseAppId,
+  measurementId: Constants.expoConfig.extra.firebaseMeasurementId,
 };
 
-// Initialize Firebase with timeout settings
+// ✅ Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// ✅ Add persistent Auth with timeout settings
+// ✅ Enable persistent auth
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// Services with timeout settings
+// ✅ Firestore and Storage
 const db = getFirestore(app);
 const storage = getStorage(app);
-
 
 export { app, auth, db, storage };
